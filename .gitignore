@@ -25,3 +25,6 @@ replay_pid*
 
 # IntelliJ folder
 .idea
+
+#Local machine configuration file
+.java-version
