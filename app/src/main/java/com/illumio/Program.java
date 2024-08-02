@@ -9,14 +9,10 @@ import java.nio.file.NoSuchFileException;
 
 public class Program {
   public static void main(String[] args) {
-    Program program = new Program();
-    // fix location for lookup table
-    String lookUpCsvFilePath = "";
+    InputParameters inputParameters = parseMainArguments(args);
 
-    // Parse the lookup table
-    // Store it inside a data structure for look up
-    LookUpFileParser lookUpFileParser = new LookUpFileParser(lookUpCsvFilePath);
-    LookUpTable lookUpTable = null;
+    LookUpFileParser lookUpFileParser = new LookUpFileParser(inputParameters.lookUpCsvPath);
+    LookUpTable lookUpTable;
     try {
       lookUpTable = lookUpFileParser.parseLookUpFile();
     } catch (FileNotFoundException e) {
@@ -28,14 +24,32 @@ public class Program {
     }
 
     // Parse the file
-    // fixed location for log file
-    String flowDataLogFilePath = "";
-    FlowLogParser flowLogParser = new FlowLogParser(flowDataLogFilePath, lookUpTable);
+    FlowLogParser flowLogParser = new FlowLogParser(inputParameters.flowLogPath, lookUpTable);
     FlowLog flowLog = flowLogParser.parseFlowLogFile();
 
     // Output the result
-    String outputFilePath = "";
-    OutputWriter outputWriter = new OutputWriter(outputFilePath);
+    OutputWriter outputWriter = new OutputWriter(inputParameters.outputPath);
     outputWriter.outputResultToFile(flowLog);
   }
+
+  private static InputParameters parseMainArguments(String[] arguments) {
+    String lookUpCsvPath = arguments[0];
+    validateInputString(lookUpCsvPath);
+    String flowLogPath = arguments[1];
+    validateInputString(flowLogPath);
+    String outputPath = arguments[2];
+    return new InputParameters(lookUpCsvPath, flowLogPath, outputPath);
+  }
+
+  private static void validateInputString(String input) {
+    if (input == null || input.isBlank()) {
+      String errorMessage = String.format("Look Up Table file is empty. path:%s",
+          (input == null) ? "NULL" : input);
+      throw new IllegalArgumentException(errorMessage);
+    }
+  }
+
+  private record InputParameters(String lookUpCsvPath,
+                                 String flowLogPath,
+                                 String outputPath) {}
 }
