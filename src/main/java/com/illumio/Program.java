@@ -3,6 +3,7 @@ package com.illumio;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import com.illumio.model.PortProtocol;
 
 public class Program {
   public static void main(String[] args) {
@@ -12,11 +13,11 @@ public class Program {
 
     // Parse the lookup table
     // Store it inside a data structure for look up
-    Map<LookUp, String> lookUpTable = program.parseLookUpFile(lookUpCsvFilePath);
+    Map<PortProtocol, String> lookUpTable = program.parseLookUpFile(lookUpCsvFilePath);
 
     // Set up the output data structure
     Map<String, Integer> tagCount = new HashMap<>();
-    Map<LookUp, Integer> lookUpCount = new HashMap<>();
+    Map<PortProtocol, Integer> lookUpCount = new HashMap<>();
 
     // Parse the file
     // fixed location for log file
@@ -30,10 +31,10 @@ public class Program {
 
   private void outputResultToFile(String outputFilePath,
                                   Map<String, Integer> tagCount,
-                                  Map<LookUp, Integer> lookUpCount) {
+                                  Map<PortProtocol, Integer> portProtocolCount) {
     try(PrintWriter printWriter = new PrintWriter(new FileOutputStream(outputFilePath))) {
       writeTagCount(printWriter, tagCount);
-      writePortProtolCombinationCount(printWriter, lookUpCount);
+      writePortProtocolCombinationCount(printWriter, portProtocolCount);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
@@ -41,12 +42,16 @@ public class Program {
     }
   }
 
-  private void writePortProtolCombinationCount(PrintWriter printWriter, Map<LookUp, Integer> lookUpCount) {
+  private void writePortProtocolCombinationCount(PrintWriter printWriter,
+                                                 Map<PortProtocol, Integer> portProtocolCount) {
     printWriter.println("Port. Protocol. Count");
-    for (Map.Entry<LookUp, Integer> entry : lookUpCount.entrySet()) {
-      LookUp lookUp = entry.getKey();
-      printWriter.write(lookUp.port);
+    for (Map.Entry<PortProtocol, Integer> entry : portProtocolCount.entrySet()) {
+      PortProtocol portProtocol = entry.getKey();
+      printWriter.write(portProtocol.port());
       printWriter.write('.');
+      printWriter.write(' ');
+
+      printWriter.write(portProtocol.protocol());
       printWriter.write(' ');
 
       int count = entry.getValue();
@@ -68,9 +73,9 @@ public class Program {
   }
 
   private void parseFlowLogFile(String logFilePath,
-                                Map<LookUp, String> lookUpTable,
+                                Map<PortProtocol, String> lookUpTable,
                                 Map<String, Integer> tagCount,
-                                Map<LookUp, Integer> lookUpCount) {
+                                Map<PortProtocol, Integer> lookUpCount) {
     File file = new File(logFilePath);
     if (!file.exists()) {
       // exception
@@ -94,15 +99,15 @@ public class Program {
         // Need to map from  Assigned Internet Protocol Numbers https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
         String rawProtocol = splitData[7];
         String protocol = convertToProtocolString(rawProtocol);
-        LookUp lookUp = new LookUp(dstPort, protocol);
-        String tag = lookUpTable.get(lookUp);
+        PortProtocol portProtocol = new PortProtocol(dstPort, protocol);
+        String tag = lookUpTable.get(portProtocol);
         if (tag == null || tag.isBlank()) {
           // warning
         } else {
           tagCount.compute(tag, (k,v) -> (v == null) ? 1 : v + 1);
         }
 
-        lookUpCount.compute(lookUp, (k,v) -> (v == null) ? 1 : v + 1);
+        lookUpCount.compute(portProtocol, (k, v) -> (v == null) ? 1 : v + 1);
       }
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
@@ -117,7 +122,7 @@ public class Program {
     return "TCP";
   }
 
-  private Map<LookUp, String> parseLookUpFile(String filePath) {
+  private Map<PortProtocol, String> parseLookUpFile(String filePath) {
     File file = new File(filePath);
     if (!file.exists()) {
       // exception
@@ -130,7 +135,7 @@ public class Program {
       // exception
     }
 
-    Map<LookUp, String> lookUpTable = new HashMap<>();
+    Map<PortProtocol, String> lookUpTable = new HashMap<>();
 
     try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
       String line;
@@ -146,8 +151,8 @@ public class Program {
         int port = Integer.valueOf(portString);
         String protocol = splitData[1];
         String tag = splitData[2];
-        LookUp lookUp = new LookUp(port, protocol);
-        lookUpTable.put(lookUp, tag);
+        PortProtocol portProtocol = new PortProtocol(port, protocol);
+        lookUpTable.put(portProtocol, tag);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -156,5 +161,5 @@ public class Program {
   }
 
 
-  private record LookUp(int port, String protocol) {}
+
 }
