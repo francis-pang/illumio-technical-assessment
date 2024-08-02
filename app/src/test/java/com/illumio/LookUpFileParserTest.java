@@ -36,7 +36,7 @@ class LookUpFileParserTest {
     lookUpFileParser = new LookUpFileParser("src/test/resources/lookup-1line.csv");
 
     LookUpTable lookupTable = lookUpFileParser.parseLookUpFile();
-    assertEquals("sv_P1",lookupTable.getTag(25, "TCP"));
+    assertEquals("SV_P1",lookupTable.getTag(25, "TCP"));
   }
 
   @Test
@@ -44,8 +44,8 @@ class LookUpFileParserTest {
     lookUpFileParser = new LookUpFileParser("src/test/resources/lookup-2line.csv");
 
     LookUpTable lookupTable = lookUpFileParser.parseLookUpFile();
-    assertEquals("sv_P1",lookupTable.getTag(25, "TCP"));
-    assertEquals("sv_P2",lookupTable.getTag(68, "UDP"));
+    assertEquals("SV_P1",lookupTable.getTag(25, "TCP"));
+    assertEquals("SV_P2",lookupTable.getTag(68, "UDP"));
   }
 
   @Test
@@ -53,8 +53,8 @@ class LookUpFileParserTest {
     lookUpFileParser = new LookUpFileParser("src/test/resources/lookup-2lines-same-tag.csv");
 
     LookUpTable lookupTable = lookUpFileParser.parseLookUpFile();
-    assertEquals("sv_P1",lookupTable.getTag(25, "TCP"));
-    assertEquals("sv_P1",lookupTable.getTag(68, "UDP"));
+    assertEquals("SV_P1",lookupTable.getTag(25, "TCP"));
+    assertEquals("SV_P1",lookupTable.getTag(68, "UDP"));
   }
 
 }
