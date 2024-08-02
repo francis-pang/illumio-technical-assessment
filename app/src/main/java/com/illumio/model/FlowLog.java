@@ -1,9 +1,10 @@
 package com.illumio.model;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FlowLog {
   private static final Logger logger = LogManager.getLogger(FlowLog.class);

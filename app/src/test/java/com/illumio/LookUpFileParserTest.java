@@ -3,12 +3,12 @@ package com.illumio;
 import com.illumio.model.LookUpTable;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.NoSuchFileException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LookUpFileParserTest {
 
