@@ -2,8 +2,12 @@ package com.illumio.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FlowLog {
+  private static final Logger logger = LogManager.getLogger(FlowLog.class);
+
   private Map<String, Integer> tagCount;
   private Map<PortProtocol, Integer> lookUpCount;
 
@@ -14,6 +18,7 @@ public class FlowLog {
 
   public boolean addLog(int port, String protocol, String tag) {
     if (tag == null || tag.isBlank()) {
+      logger.info("Tag is invalid. Tag={}.", (tag == null) ? "NULL" : tag);
       return false;
     }
     PortProtocol portProtocol = new PortProtocol(port, protocol);
