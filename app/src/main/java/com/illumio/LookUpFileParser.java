@@ -58,7 +58,8 @@ public class LookUpFileParser {
         String protocol = splitData[1];
         String upperProtocol = protocol.toUpperCase();
         String tag = splitData[2];
-        lookUpTable.add(port, upperProtocol, tag);
+        String upperTag = tag.toUpperCase();
+        lookUpTable.add(port, upperProtocol, upperTag);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);

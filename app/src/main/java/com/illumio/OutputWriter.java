@@ -30,7 +30,7 @@ public class OutputWriter {
     printWriter.println("Port. Protocol. Count");
     for (Map.Entry<PortProtocol, Integer> entry : portProtocolCount.entrySet()) {
       PortProtocol portProtocol = entry.getKey();
-      printWriter.write(portProtocol.port());
+      printWriter.write(Integer.toString(portProtocol.port()));
       printWriter.write('.');
       printWriter.write(' ');
 
@@ -38,7 +38,7 @@ public class OutputWriter {
       printWriter.write(' ');
 
       int count = entry.getValue();
-      printWriter.write(count);
+      printWriter.write(Integer.toString(count));
       printWriter.println();
     }
   }
@@ -51,7 +51,7 @@ public class OutputWriter {
       printWriter.write(tag);
       printWriter.write(' ');
       int count = entry.getValue();
-      printWriter.write(count);
+      printWriter.write(Integer.toString(count));
       printWriter.println();
     }
   }

@@ -1,0 +1,7 @@
+Tag: Count
+NEW_P2 1
+NEW_P1 4
+Port. Protocol. Count
+3389. TCP 1
+22. TCP 2
+0. ICMP 2
